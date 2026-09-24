@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+.huggingface/
+
+# Model weights and prepared model folders: they live on Hugging Face, never in git
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.gguf
+checkpoints/
+hf-release/
+benchmark-results/
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+.secrets/
+secrets/

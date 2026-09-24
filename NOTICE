@@ -1,0 +1,80 @@
+Tacet
+Copyright 2026 CodePawl
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+It includes or builds on the third party work listed below.
+
+
+Software
+========
+
+Laya (https://huggingface.co/convaiinnovations/laya, pip package laya 0.3.5)
+Copyright Convai Innovations. Licensed under the Apache License, Version 2.0.
+Tacet does not depend on the laya package. The following parts are copied from
+laya/common.py and adapted (renamed, split into smaller functions):
+  src/tacet/packing.py   question type ids, criterion, option and state rendering
+                         (the prompt format the model was trained on)
+  src/tacet/network.py   layout of the two layer head and the option scorer
+  src/tacet/decoding.py  normalized entropy confidence
+  scripts/benchmark.py   15 bin expected calibration error, and the scoring
+                         definitions from Laya's typed-decisions evaluation notebook
+The packed sequence (all questions and the state in one pass) and the per token
+segment embedding are CodePawl's own.
+
+
+Model weights (codepawl/tacet-small, codepawl/tacet-base on Hugging Face)
+=========================================================================
+
+The released weights are fine tuned from mmBERT:
+
+mmBERT (jhu-clsp/mmBERT-small, jhu-clsp/mmBERT-base)
+By the Johns Hopkins University Center for Language and Speech Processing (JHU CLSP).
+Licensed under the MIT License:
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+TODO(release): copy the exact copyright line from the mmBERT repository's
+LICENSE file (https://github.com/JHU-CLSP/mmBERT) above the permission notice.
+TODO(release): mmBERT ships the Gemma 2 tokenizer, which the released models
+reuse. Confirm whether the tokenizer carries terms beyond mmBERT's MIT licence.
+
+
+Training data
+=============
+
+TODO(release): reconcile this list with the final dataset list in the phase 3
+release report before publishing.
+
+  LocalLLaMA/typed-decisions            Apache License 2.0 (train split only;
+                                        the test split is held out for evaluation)
+  AmazonScience/massive (MASSIVE)       CC BY 4.0
+                                        Copyright Amazon.com, Inc.
+  PolyAI/banking77                      CC BY 4.0
+                                        Copyright PolyAI
+  bitext/Bitext-customer-support-llm-chatbot-training-dataset
+                                        Community Data License Agreement,
+                                        Sharing, Version 1.0. Under its section
+                                        3.5, the licence places no obligations
+                                        on Results (the trained model).
+  google/civil_comments                 CC0 1.0
+  Synthetic cases and labels generated with Qwen3-30B-A3B-Instruct-2507 and
+  Qwen3-30B-A3B-Thinking-2507 (Apache License 2.0).
+
+The CC BY 4.0 datasets were adapted into typed decision cases (questions and
+answer distributions were derived from their labels).
