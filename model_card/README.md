@@ -19,6 +19,8 @@ datasets:
 
 # {{display_name}}
 
+[Code on GitHub](https://github.com/codepawl/tacet) · [PyPI: tacet](https://pypi.org/project/tacet/) · [Docs](https://tacet.codepawl.com/docs) · [Discord](https://codepawl.com/discord)
+
 {{display_name}} (`{{repo_id}}`) answers typed questions about a piece of state and gives a probability for every
 option. It is an encoder, not a text generator: all questions and the state are packed into one
 sequence and answered in one forward pass. {{parameters}} parameters, fine tuned from

@@ -1,5 +1,7 @@
 # Tacet
 
+[Model on Hugging Face](https://huggingface.co/codepawl/tacet-sonata) · [PyPI](https://pypi.org/project/tacet/) · [Docs](https://tacet.codepawl.com/docs) · [Discord](https://codepawl.com/discord)
+
 Tacet answers typed questions about a piece of state and gives a probability for every option.
 It is an encoder, not a text generator: all questions and the state are packed into one sequence
 and answered in one forward pass.
