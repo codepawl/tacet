@@ -147,6 +147,11 @@ Other flags: `--host`, `--device`, `--max-length`, `--revision`. See `tacet serv
 
 ## Benchmark
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/benchmark-dark.png">
+  <img src="assets/benchmark-light.png" alt="Tacet Sonata against Laya: 211 vs 14.9 requests per second, 32.5 vs 62.4 ms, 144M vs 421M parameters, accuracy 0.7625 vs 0.7675 (a tie), calibration error 0.095 vs 0.215">
+</picture>
+
 `scripts/benchmark.py` scores a model on the test split of
 [LocalLLaMA/typed-decisions](https://huggingface.co/datasets/LocalLLaMA/typed-decisions)
 (400 cases, 2,000 decisions) with the metric definitions from Laya's evaluation.

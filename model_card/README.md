@@ -78,6 +78,8 @@ live in the `tacet` package.
 
 ## Evaluation
 
+<img src="https://raw.githubusercontent.com/codepawl/tacet/main/assets/benchmark-light.png" alt="Tacet Sonata against Laya: 211 vs 14.9 requests per second, 32.5 vs 62.4 ms, 144M vs 421M parameters, accuracy 0.7625 vs 0.7675 (a tie), calibration error 0.095 vs 0.215">
+
 LocalLLaMA/typed-decisions test split, 400 cases, 2,000 decisions, scored with
 `scripts/benchmark.py` in the tacet repository:
 
