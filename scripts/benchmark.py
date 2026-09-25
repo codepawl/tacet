@@ -10,7 +10,7 @@ orders (`--orderings N`); the flip rate says how often the answer depends on the
 
 Usage, from a clone of the repository:
     uv sync --extra benchmark
-    uv run python scripts/benchmark.py --model codepawl/tacet-small
+    uv run python scripts/benchmark.py --model codepawl/tacet-sonata
     uv run python scripts/benchmark.py --model path/to/folder --device cuda --orderings 5 --out result.json
 """
 
@@ -210,7 +210,7 @@ def print_result(result):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--model", default="codepawl/tacet-small", help="Hub repo id or local folder")
+    parser.add_argument("--model", default="codepawl/tacet-sonata", help="Hub repo id or local folder")
     parser.add_argument("--device", default="auto")
     parser.add_argument("--max-length", type=int, default=1536)
     parser.add_argument("--split", default="test")

@@ -30,7 +30,7 @@ def test_assembles_a_loadable_folder_without_training_details(tmp_path, monkeypa
     out = str(tmp_path / "release")
     os.makedirs(checkpoint)
     write_research_checkpoint(checkpoint)
-    monkeypatch.setattr(sys, "argv", ["prepare_hf_repo.py", "--checkpoint", checkpoint, "--name", "tacet-small",
+    monkeypatch.setattr(sys, "argv", ["prepare_hf_repo.py", "--checkpoint", checkpoint, "--name", "tacet-sonata",
                                       "--out", out])
     load_script().main()
 
@@ -38,10 +38,10 @@ def test_assembles_a_loadable_folder_without_training_details(tmp_path, monkeypa
                                        "model.safetensors", "tokenizer"]
     with open(os.path.join(out, "config.json"), encoding="utf-8") as handle:
         config = json.load(handle)
-    assert config == {"tacet_format": 1, "name": "tacet-small", "backbone": "jhu-clsp/mmBERT-small",
+    assert config == {"tacet_format": 1, "name": "tacet-sonata", "backbone": "jhu-clsp/mmBERT-small",
                       "head_layers": 2, "trained_max_length": 4096}
     with open(os.path.join(out, "README.md"), encoding="utf-8") as handle:
         card = handle.read()
     assert "{{" not in card
-    assert "codepawl/tacet-small" in card
+    assert "codepawl/tacet-sonata" in card
     assert "base_model: jhu-clsp/mmBERT-small" in card

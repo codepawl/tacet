@@ -13,7 +13,7 @@ The checkpoint's own training config is not copied: it carries training history 
 After assembling, the folder is loaded with `tacet.load` and answers one request, as a check.
 
 Usage:
-    python scripts/prepare_hf_repo.py --checkpoint path/to/tacet-v3-small --name tacet-small --out hf-release/tacet-small
+    python scripts/prepare_hf_repo.py --checkpoint path/to/tacet-v3-small --name tacet-sonata --out hf-release/tacet-sonata
 """
 
 import argparse
@@ -64,10 +64,16 @@ def readable_count(parameters):
     return f"{round(parameters / 1e6)}M"
 
 
+def display_name(name):
+    """tacet-sonata -> Tacet Sonata."""
+    return " ".join(part.capitalize() for part in name.split("-"))
+
+
 def fill_model_card(config, parameters):
     with open(MODEL_CARD_TEMPLATE, encoding="utf-8") as handle:
         card = handle.read()
-    values = {"name": config["name"], "repo_id": f"{HUB_ORGANIZATION}/{config['name']}",
+    values = {"name": config["name"], "display_name": display_name(config["name"]),
+              "repo_id": f"{HUB_ORGANIZATION}/{config['name']}",
               "backbone": config["backbone"], "parameters": readable_count(parameters)}
     for key, value in values.items():
         card = card.replace("{{" + key + "}}", value)
@@ -100,7 +106,7 @@ def check_folder(out):
 def main():
     parser = argparse.ArgumentParser(description="Assemble a Hugging Face model folder from a Tacet checkpoint.")
     parser.add_argument("--checkpoint", required=True, help="folder with model.safetensors, encoder/, tokenizer/")
-    parser.add_argument("--name", required=True, help="model name, such as tacet-small or tacet-base")
+    parser.add_argument("--name", required=True, help="model name, such as tacet-sonata or tacet-symphony")
     parser.add_argument("--out", required=True, help="output folder; must not exist yet")
     parser.add_argument("--skip-check", action="store_true", help="do not load the folder after assembling it")
     arguments = parser.parse_args()

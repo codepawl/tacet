@@ -13,8 +13,8 @@ def build_parser():
     parser = argparse.ArgumentParser(prog="tacet")
     commands = parser.add_subparsers(dest="command", required=True)
     serve = commands.add_parser("serve", help="serve the Tacet HTTP API on a local model")
-    serve.add_argument("--model", default="codepawl/tacet-small",
-                       help="Hugging Face repo id or local folder (default: codepawl/tacet-small)")
+    serve.add_argument("--model", default="codepawl/tacet-sonata",
+                       help="Hugging Face repo id or local folder (default: codepawl/tacet-sonata)")
     serve.add_argument("--revision", default=None, help="Hub revision (branch, tag or commit)")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)

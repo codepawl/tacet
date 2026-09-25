@@ -14,7 +14,7 @@ The fast tests build a tiny random model and need no download. The tests marked 
 real model folder; point `TACET_TEST_CHECKPOINT` at one to run them:
 
 ```bash
-TACET_TEST_CHECKPOINT=path/to/tacet-small uv run pytest -m slow
+TACET_TEST_CHECKPOINT=path/to/tacet-sonata uv run pytest -m slow
 ```
 
 ## Code style

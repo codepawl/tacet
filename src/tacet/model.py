@@ -61,7 +61,7 @@ def check_max_length(max_length):
                          f"got {max_length}")
 
 
-def load(name_or_path="codepawl/tacet-small", device="auto", max_length=DEFAULT_MAX_LENGTH, revision=None):
+def load(name_or_path="codepawl/tacet-sonata", device="auto", max_length=DEFAULT_MAX_LENGTH, revision=None):
     """Loads a Tacet model from a Hugging Face repo id or a local folder.
 
     `device` is "auto" (CUDA when available), "cpu", "cuda" or "cuda:N". On a GPU the model

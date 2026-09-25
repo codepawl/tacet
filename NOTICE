@@ -22,12 +22,12 @@ The packed sequence (all questions and the state in one pass) and the per token
 segment embedding are CodePawl's own.
 
 
-Model weights (codepawl/tacet-small, codepawl/tacet-base on Hugging Face)
-=========================================================================
+Model weights (codepawl/tacet-sonata on Hugging Face)
+===============================================
 
 The released weights are fine tuned from mmBERT:
 
-mmBERT (jhu-clsp/mmBERT-small, jhu-clsp/mmBERT-base)
+mmBERT (jhu-clsp/mmBERT-small)
 By the Johns Hopkins University Center for Language and Speech Processing (JHU CLSP).
 Licensed under the MIT License:
 
@@ -49,17 +49,15 @@ Licensed under the MIT License:
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 
-TODO(release): copy the exact copyright line from the mmBERT repository's
-LICENSE file (https://github.com/JHU-CLSP/mmBERT) above the permission notice.
-TODO(release): mmBERT ships the Gemma 2 tokenizer, which the released models
-reuse. Confirm whether the tokenizer carries terms beyond mmBERT's MIT licence.
+The mmBERT Hugging Face repositories declare the MIT License and ship no
+separate copyright line, so the notice above names the authors as listed there.
+The tokenizer files in the released models are mmBERT's tokenizer files, which
+mmBERT distributes under the same MIT licence; mmBERT's documentation says its
+vocabulary is the Gemma 2 tokenizer.
 
 
 Training data
 =============
-
-TODO(release): reconcile this list with the final dataset list in the phase 3
-release report before publishing.
 
   LocalLLaMA/typed-decisions            Apache License 2.0 (train split only;
                                         the test split is held out for evaluation)
@@ -75,6 +73,9 @@ release report before publishing.
   google/civil_comments                 CC0 1.0
   Synthetic cases and labels generated with Qwen3-30B-A3B-Instruct-2507 and
   Qwen3-30B-A3B-Thinking-2507 (Apache License 2.0).
+
+Not used: clapAI/MultiLingualSentiment (upstream licences unknown), any share
+alike dataset, and any text written by a proprietary model.
 
 The CC BY 4.0 datasets were adapted into typed decision cases (questions and
 answer distributions were derived from their labels).

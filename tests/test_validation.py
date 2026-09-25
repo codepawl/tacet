@@ -7,7 +7,7 @@ import pytest
 from tacet import validation
 from tacet.validation import RequestError
 
-SERVED = "tacet-small"
+SERVED = "tacet-sonata"
 
 
 def test_valid_request_passes(good_request):
@@ -16,7 +16,7 @@ def test_valid_request_passes(good_request):
     assert set(questions) == {"route", "urgency", "refund"}
 
 
-@pytest.mark.parametrize("model", [None, SERVED, "codepawl/tacet-small", "tacet", "tacet-1", "tacet-latest",
+@pytest.mark.parametrize("model", [None, SERVED, "codepawl/tacet-sonata", "tacet", "tacet-1", "tacet-latest",
                                    "codepawl/tacet-1"])
 def test_served_name_and_hosted_aliases_are_accepted(good_request, model):
     if model is not None:

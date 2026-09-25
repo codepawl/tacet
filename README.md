@@ -10,12 +10,9 @@ Three question types:
 - **score**: place the state on an ordered rubric. You get a distribution over the levels and the expected score.
 - **noul**: yes or no. You get the probability of yes.
 
-Two sizes, both multilingual, fine tuned from [mmBERT](https://huggingface.co/jhu-clsp/mmBERT-small):
-
-| model | parameters | backbone |
-|---|---|---|
-| [`codepawl/tacet-small`](https://huggingface.co/codepawl/tacet-small) | 144M | mmBERT-small |
-| [`codepawl/tacet-base`](https://huggingface.co/codepawl/tacet-base) | 322M | mmBERT-base |
+The model is Tacet Sonata, [`codepawl/tacet-sonata`](https://huggingface.co/codepawl/tacet-sonata): 144M parameters,
+fine tuned from [mmBERT-small](https://huggingface.co/jhu-clsp/mmBERT-small), trained on cases in 16
+languages. It runs on a CPU; a GPU makes it faster.
 
 ## Install
 
@@ -32,15 +29,15 @@ This pulls the default PyTorch build. For a GPU, install the CUDA build of PyTor
 import tacet
 from tacet import choice, score, noul
 
-model = tacet.load("codepawl/tacet-small")  # or a local folder; device="cpu" or "cuda"
+model = tacet.load("codepawl/tacet-sonata")  # or a local folder; device="cpu" or "cuda"
 
 result = model.decide(
-    state={"ticket": "I was charged twice for my March invoice. Please fix this today."},
+    state={"ticket": "I was charged twice for my March invoice. Please refund the second charge."},
     questions={
         "route": choice("Which team should handle this?",
                         {"billing": "payments, invoices, refunds", "tech": "bugs and outages"}),
         "urgency": score("How urgent is this?", ["low", "medium", "high"]),
-        "refund": noul("Does the customer ask for money back?"),
+        "refund": noul("Is the customer asking for a refund?"),
     },
 )
 ```
@@ -49,7 +46,7 @@ result = model.decide(
 
 ```json
 {
-  "model": "tacet-small",
+  "model": "tacet-sonata",
   "answers": {
     "route": {"type": "choice", "choice": "billing",
               "probabilities": {"billing": 0.97, "tech": 0.03}, "confidence": 0.8},
@@ -84,7 +81,7 @@ results = model.decide_batch(
 
 ```python
 tacet.load(
-    "codepawl/tacet-base",   # Hub repo id or local folder
+    "codepawl/tacet-sonata",  # Hub repo id or local folder
     device="auto",           # "auto" picks CUDA when available; bfloat16 on GPU, float32 on CPU
     max_length=1536,         # packed sequence length in tokens, up to 4096
     revision=None,           # Hub branch, tag or commit
@@ -100,7 +97,7 @@ states; the cost of a pass grows with the length.
 or for Jev's `/v1/systemone` format, can point its base URL at localhost.
 
 ```bash
-tacet serve --model codepawl/tacet-small --port 8000
+tacet serve --model codepawl/tacet-sonata --port 8000
 ```
 
 | route | what it does |
@@ -140,24 +137,35 @@ From a clone of this repository:
 
 ```bash
 uv sync --extra benchmark
-uv run python scripts/benchmark.py --model codepawl/tacet-small
+uv run python scripts/benchmark.py --model codepawl/tacet-sonata
 ```
 
 `--device cuda`, `--batch-size`, `--orderings N` (option order robustness) and `--out result.json`
 are optional.
 
-| model | accuracy | Brier | ECE |
-|---|---|---|---|
-| tacet-small | to be filled from the release report | | |
-| tacet-base | to be filled from the release report | | |
+| model | parameters | accuracy | Brier | ECE |
+|---|---|---|---|---|
+| tacet-sonata | 144M | 0.7625 | 0.0678 | 0.095 |
+| Laya | 421M | 0.7675 | 0.0615 | 0.215 |
 
-The train split of this benchmark is part of the training data, so these are in distribution
-numbers for its four workflows.
+Both rows were scored with this script on the same 2,000 decisions. The accuracy gap is not
+significant (paired McNemar p = 0.63), so treat it as a tie. Tacet's probabilities are closer to
+how often it is right (lower ECE), while Laya has the lower Brier score.
+
+The train split of this benchmark is part of the training data for both models, so these are in
+distribution numbers for its four workflows.
+
+We also check free text on our own suite of 386 hand written cases in 8 languages (not public, to
+keep it out of training data). There Tacet Sonata answers 53.9% of 1,192 questions the way the case
+author did, where our first release candidate, trained on the benchmark alone, got 37.9%. Chance is
+about 35%.
 
 ## Limits
 
 - Tacet is strong on the benchmark's four workflows (customer service, invoice processing,
   security incidents, agent trace observability) and on routing and triage questions like them.
+- Yes or no answers depend a lot on wording. They are more reliable when the question uses the
+  same words as the text ("refund" in both) than when it paraphrases ("money back").
 - It is weaker on long free text, on questions that need date arithmetic, and on counting
   (for example, how many log rows meet two conditions). If a decision depends on a number, compute
   the number in code and put it in the state.
