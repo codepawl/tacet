@@ -20,8 +20,10 @@ languages. It runs on a CPU; a GPU makes it faster.
 pip install tacet
 ```
 
-This pulls the default PyTorch build. For a GPU, install the CUDA build of PyTorch first
-(see [pytorch.org](https://pytorch.org/get-started/locally/)), then `pip install tacet`.
+This pulls the default PyTorch build. For an NVIDIA GPU, install the CUDA build of PyTorch first
+(see [pytorch.org](https://pytorch.org/get-started/locally/)), then `pip install tacet`. For Intel
+graphics (Arc, Core Ultra), install the XPU build the same way
+(`pip install torch --index-url https://download.pytorch.org/whl/xpu`); `device="auto"` finds it.
 
 ## Quickstart
 
@@ -29,7 +31,7 @@ This pulls the default PyTorch build. For a GPU, install the CUDA build of PyTor
 import tacet
 from tacet import choice, score, noul
 
-model = tacet.load("codepawl/tacet-sonata")  # or a local folder; device="cpu" or "cuda"
+model = tacet.load("codepawl/tacet-sonata")  # or a local folder; device="cpu", "cuda" or "xpu"
 
 result = model.decide(
     state={"ticket": "I was charged twice for my March invoice. Please refund the second charge."},
@@ -82,7 +84,7 @@ results = model.decide_batch(
 ```python
 tacet.load(
     "codepawl/tacet-sonata",  # Hub repo id or local folder
-    device="auto",           # "auto" picks CUDA when available; bfloat16 on GPU, float32 on CPU
+    device="auto",           # "auto" picks CUDA, then an Intel XPU, then the CPU; bfloat16 on a GPU
     max_length=1536,         # packed sequence length in tokens, up to 4096
     revision=None,           # Hub branch, tag or commit
 )

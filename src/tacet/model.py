@@ -20,10 +20,24 @@ CONFIG_FILE_NAMES = ("config.json", "rl_agent_config.json")
 MODEL_FILES = ["config.json", "model.safetensors", "encoder/*", "tokenizer/*"]
 
 
+# Device types that run the model in bfloat16 autocast.
+ACCELERATOR_TYPES = ("cuda", "xpu")
+
+
+def xpu_is_available():
+    """Intel GPUs (Arc, Core Ultra graphics) through PyTorch's XPU build."""
+    return hasattr(torch, "xpu") and torch.xpu.is_available()
+
+
 def resolve_device(device):
-    if device == "auto":
-        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    return torch.device(device)
+    """"auto" picks CUDA, then an Intel XPU, then the CPU."""
+    if device != "auto":
+        return torch.device(device)
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    if xpu_is_available():
+        return torch.device("xpu")
+    return torch.device("cpu")
 
 
 def model_directory(name_or_path, revision=None):
@@ -64,8 +78,8 @@ def check_max_length(max_length):
 def load(name_or_path="codepawl/tacet-sonata", device="auto", max_length=DEFAULT_MAX_LENGTH, revision=None):
     """Loads a Tacet model from a Hugging Face repo id or a local folder.
 
-    `device` is "auto" (CUDA when available), "cpu", "cuda" or "cuda:N". On a GPU the model
-    runs in bfloat16 autocast. `max_length` caps the packed sequence in tokens; the state is
+    `device` is "auto" (CUDA, then an Intel XPU, then the CPU), "cpu", "cuda", "cuda:N", "xpu"
+    or "xpu:N". On a GPU the model runs in bfloat16 autocast. `max_length` caps the packed sequence in tokens; the state is
     cut to fit, and the answer's usage says so.
     """
     from transformers import AutoTokenizer
@@ -119,8 +133,8 @@ class TacetModel:
         """One forward pass over prepared requests; one response per request, in order."""
         batch = collate(packed_requests, self.tokenizer.pad_token_id)
         inputs = {key: tensor.to(self.device) for key, tensor in batch.items()}
-        on_gpu = self.device.type == "cuda"
-        with torch.autocast(self.device.type, dtype=torch.bfloat16, enabled=on_gpu):
+        on_accelerator = self.device.type in ACCELERATOR_TYPES
+        with torch.autocast(self.device.type, dtype=torch.bfloat16, enabled=on_accelerator):
             logits = self.network(**inputs)
         logits = logits.float().cpu().numpy()
         responses = []

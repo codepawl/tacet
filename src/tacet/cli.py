@@ -18,7 +18,7 @@ def build_parser():
     serve.add_argument("--revision", default=None, help="Hub revision (branch, tag or commit)")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
-    serve.add_argument("--device", default="auto", help="auto, cpu, cuda or cuda:N")
+    serve.add_argument("--device", default="auto", help="auto, cpu, cuda, cuda:N, xpu or xpu:N")
     serve.add_argument("--max-length", type=int, default=DEFAULT_MAX_LENGTH,
                        help=f"packed sequence length in tokens, up to 4096 (default {DEFAULT_MAX_LENGTH})")
     serve.add_argument("--api-key", default=None,
