@@ -1,6 +1,20 @@
-# Tacet
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/tacet-mark-light.png">
+    <img src="assets/tacet-mark.png" alt="Tacet" width="88">
+  </picture>
+</p>
 
-[Model on Hugging Face](https://huggingface.co/codepawl/tacet-sonata) · [PyPI](https://pypi.org/project/tacet/) · [Docs](https://tacet.codepawl.com/docs) · [Discord](https://codepawl.com/discord)
+<h1 align="center">Tacet</h1>
+
+<p align="center">
+  <a href="https://huggingface.co/codepawl/tacet-sonata"><img alt="Hugging Face" src="https://img.shields.io/badge/Hugging%20Face-tacet--sonata-FFD21E?logo=huggingface&logoColor=000"></a>
+  <a href="https://github.com/codepawl/tacet"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-codepawl%2Ftacet-181717?logo=github&logoColor=fff"></a>
+  <a href="https://pypi.org/project/tacet/"><img alt="PyPI" src="https://img.shields.io/pypi/v/tacet?logo=pypi&logoColor=fff&label=PyPI&color=3775A9"></a>
+  <a href="https://tacet.codepawl.com/docs"><img alt="Docs" src="https://img.shields.io/badge/Docs-tacet.codepawl.com-4F7FE0?logo=readthedocs&logoColor=fff"></a>
+  <a href="https://codepawl.com/discord"><img alt="Discord" src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=fff"></a>
+  <a href="https://github.com/codepawl/tacet/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-2F2F2F"></a>
+</p>
 
 Tacet answers typed questions about a piece of state and gives a probability for every option.
 It is an encoder, not a text generator: all questions and the state are packed into one sequence
