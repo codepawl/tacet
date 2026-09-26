@@ -38,8 +38,11 @@ benchmark = ["pyarrow>=17"]
 tacet = "tacet.cli:main"
 
 [project.urls]
-Homepage = "https://codepawl.com"
-Models = "https://huggingface.co/codepawl"
+Homepage = "https://tacet.codepawl.com"
+Documentation = "https://tacet.codepawl.com/docs"
+Repository = "https://github.com/codepawl/tacet"
+Model = "https://huggingface.co/codepawl/tacet-sonata"
+Issues = "https://github.com/codepawl/tacet/issues"
 
 [dependency-groups]
 dev = ["pytest>=8", "httpx>=0.27"]

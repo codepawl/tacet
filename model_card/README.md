@@ -15,6 +15,26 @@ datasets:
 - PolyAI/banking77
 - bitext/Bitext-customer-support-llm-chatbot-training-dataset
 - google/civil_comments
+model-index:
+- name: {{name}}
+  results:
+  - task:
+      type: text-classification
+      name: Typed decisions
+    dataset:
+      name: LocalLLaMA/typed-decisions
+      type: LocalLLaMA/typed-decisions
+      split: test
+    metrics:
+    - type: accuracy
+      value: 0.7625
+      name: Accuracy
+    - type: brier_score
+      value: 0.0678
+      name: Brier score
+    - type: ece
+      value: 0.095
+      name: Expected calibration error
 ---
 
 <p align="center">

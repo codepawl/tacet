@@ -1,0 +1,24 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install the package with CPU PyTorch
+        run: |
+          uv venv
+          uv pip install --torch-backend cpu -e . pytest httpx
+      - name: Run the tests (the slow checkpoint tests skip without TACET_TEST_CHECKPOINT)
+        run: uv run --no-sync pytest -q
