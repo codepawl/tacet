@@ -101,7 +101,7 @@ results = model.decide_batch(
 tacet.load(
     "codepawl/tacet-sonata",  # Hub repo id or local folder
     device="auto",           # "auto" picks CUDA, then an Intel XPU, then the CPU; bfloat16 on a GPU
-    max_length=1536,         # packed sequence length in tokens, up to 4096
+    max_length=4096,         # packed sequence length in tokens, 256 to 4096
     revision=None,           # Hub branch, tag or commit
 )
 ```
@@ -152,6 +152,9 @@ Other flags: `--host`, `--device`, `--max-length`, `--revision`. See `tacet serv
   <img src="assets/benchmark-light.png" alt="Tacet Sonata against Laya: 211 vs 14.9 requests per second, 32.5 vs 62.4 ms, 144M vs 421M parameters, accuracy 0.7625 vs 0.7675 (a tie), calibration error 0.095 vs 0.215">
 </picture>
 
+The chart is from the first Sonata release; the current weights measure ECE 0.093 instead of
+0.095 and the same accuracy, speed and size.
+
 `scripts/benchmark.py` scores a model on the test split of
 [LocalLLaMA/typed-decisions](https://huggingface.co/datasets/LocalLLaMA/typed-decisions)
 (400 cases, 2,000 decisions) with the metric definitions from Laya's evaluation.
@@ -168,7 +171,7 @@ are optional.
 
 | model | parameters | accuracy | Brier | ECE |
 |---|---|---|---|---|
-| tacet-sonata | 144M | 0.7625 | 0.0678 | 0.095 |
+| tacet-sonata | 144M | 0.7625 | 0.0705 | 0.093 |
 | Laya | 421M | 0.7675 | 0.0615 | 0.215 |
 
 Both rows were scored with this script on the same 2,000 decisions. The accuracy gap is not
@@ -179,9 +182,15 @@ The train split of this benchmark is part of the training data for both models, 
 distribution numbers for its four workflows.
 
 We also check free text on our own suite of 386 hand written cases in 8 languages (not public, to
-keep it out of training data). There Tacet Sonata answers 53.9% of 1,192 questions the way the case
+keep it out of training data). There Tacet Sonata answers 54.5% of 1,192 questions the way the case
 author did, where our first release candidate, trained on the benchmark alone, got 37.9%. Chance is
 about 35%.
+
+On the public half of [JevBench](https://benchmarkheaven.com/jev-models) (231 decisions, run with
+its own harness and `max_length=4096`), Tacet Sonata gets 63.2%: 95.8% on the easy tier, 75.0% on the
+original tier and 41.4% on the hard tier. Hard tier questions need several steps of reasoning over long
+documents, and that is where a 144M encoder is weakest; models with 4B or more parameters lead it.
+We measured this ourselves, so it is not the official board score.
 
 ## Limits
 
@@ -194,7 +203,7 @@ about 35%.
   the number in code and put it in the state.
 - The probabilities are calibrated on the training distribution. On inputs far from it, check
   them against your own labelled examples before you gate anything on a confidence threshold.
-- It reads at most `max_length` tokens (1536 by default, 4096 at most). A longer state is cut, and
+- It reads at most `max_length` tokens (4096 by default and at most). A longer state is cut, and
   `usage.state_truncated` tells you.
 - It does not generate text or explain its answers.
 

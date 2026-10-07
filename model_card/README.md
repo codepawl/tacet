@@ -30,10 +30,10 @@ model-index:
       value: 0.7625
       name: Accuracy
     - type: brier_score
-      value: 0.0678
+      value: 0.0705
       name: Brier score
     - type: ece
-      value: 0.095
+      value: 0.093
       name: Expected calibration error
 ---
 
@@ -100,12 +100,15 @@ live in the `tacet` package.
 
 <img src="https://raw.githubusercontent.com/codepawl/tacet/main/assets/benchmark-light.png" alt="Tacet Sonata against Laya: 211 vs 14.9 requests per second, 32.5 vs 62.4 ms, 144M vs 421M parameters, accuracy 0.7625 vs 0.7675 (a tie), calibration error 0.095 vs 0.215">
 
+The chart is from the first Sonata release; the current weights measure ECE 0.093 instead of
+0.095 and the same accuracy, speed and size.
+
 LocalLLaMA/typed-decisions test split, 400 cases, 2,000 decisions, scored with
 `scripts/benchmark.py` in the tacet repository:
 
 | model | parameters | accuracy | Brier | ECE (15 bins) |
 |---|---|---|---|---|
-| {{display_name}} | {{parameters}} | 0.7625 | 0.0678 | 0.095 |
+| {{display_name}} | {{parameters}} | 0.7625 | 0.0705 | 0.093 |
 | Laya | 421M | 0.7675 | 0.0615 | 0.215 |
 
 Both rows were scored with the same script on the same 2,000 decisions. The accuracy gap is not
@@ -118,11 +121,17 @@ Other checks, on data outside that benchmark:
 
 | evaluation | {{display_name}} | first release candidate (benchmark only) |
 |---|---|---|
-| our hand written free text suite, 386 cases in 8 languages, 1,192 questions (not public) | 0.539 | 0.379 |
-| MASSIVE intent and domain, test split, 16 languages | 0.778 | 0.370 |
+| our hand written free text suite, 386 cases in 8 languages, 1,192 questions (not public) | 0.545 | 0.379 |
+| MASSIVE intent and domain, test split, 16 languages | 0.784 | 0.370 |
 
 Chance on the free text suite is about 0.35. The suite's cases were written for evaluation only and
 never trained on.
+
+On the public half of [JevBench](https://benchmarkheaven.com/jev-models) (231 decisions, run with
+its own harness and `max_length=4096`), Tacet Sonata gets 63.2%: 95.8% on the easy tier, 75.0% on the
+original tier and 41.4% on the hard tier. Hard tier questions need several steps of reasoning over long
+documents, and that is where a 144M encoder is weakest; models with 4B or more parameters lead it.
+We measured this ourselves, so it is not the official board score.
 
 ## Limits
 
@@ -134,7 +143,7 @@ never trained on.
   decision depends on a number, compute it in code and put it in the state.
 - The probabilities are calibrated on the training distribution. Check them against your own
   labelled examples before you gate anything on a confidence threshold.
-- Reads at most 1536 tokens by default and up to 4096 with `max_length`. A longer state is cut and
+- Reads at most 4096 tokens, the length it was trained at. A longer state is cut and
   the response says so (`usage.state_truncated`).
 - Does not generate text or explain its answers.
 

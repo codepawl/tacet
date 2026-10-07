@@ -212,7 +212,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--model", default="codepawl/tacet-sonata", help="Hub repo id or local folder")
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--max-length", type=int, default=1536)
+    parser.add_argument("--max-length", type=int, default=4096)
     parser.add_argument("--split", default="test")
     parser.add_argument("--limit", type=int, default=None, help="score only the first N cases")
     parser.add_argument("--batch-size", type=int, default=1,

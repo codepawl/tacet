@@ -46,7 +46,8 @@ def test_validation_errors_use_the_envelope(client, good_request):
 
 def test_questions_too_long_is_a_400(client):
     levels = ["ticket " * 45] * 60
-    body = {"state": "s", "questions": {"q": {"type": "score", "instructions": "how?", "criteria": levels}}}
+    question = {"type": "score", "instructions": "how?", "criteria": levels}
+    body = {"state": "s", "questions": {"q1": question, "q2": question}}
     response = client.post("/v1/systemone", json=body)
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "questions_too_long"
@@ -83,7 +84,7 @@ def test_models_and_health(client):
     listing = client.get("/v1/models").json()
     assert listing["object"] == "list"
     assert listing["data"][0]["id"] == "tacet-tiny"
-    assert listing["data"][0]["context_length"] == 1536
+    assert listing["data"][0]["context_length"] == 4096
     assert client.get("/v1/health").json() == {"ok": True, "model": "tacet-tiny"}
     assert client.get("/health").json()["ok"] is True
 

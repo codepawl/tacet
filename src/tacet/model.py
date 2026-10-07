@@ -10,7 +10,10 @@ from .network import TacetNetwork
 from .packing import QuestionsTooLong, collate, pack_request
 from .validation import RequestError, validate_request
 
-DEFAULT_MAX_LENGTH = 1536
+# The length the model was trained at. Cutting long states shorter by default cost 5.4 points on
+# JevBench's hard tier (long policies lose the facts at their end); short requests pay nothing,
+# since a batch is padded only to its longest request.
+DEFAULT_MAX_LENGTH = 4096
 # mmBERT reads up to 8192 positions, but Tacet was trained and measured up to 4096.
 LONGEST_MAX_LENGTH = 4096
 SHORTEST_MAX_LENGTH = 256

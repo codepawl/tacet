@@ -6,7 +6,7 @@ from tacet import RequestError, choice, noul, score
 
 def test_load_reads_the_name_and_defaults(tiny_model):
     assert tiny_model.name == "tacet-tiny"
-    assert tiny_model.max_length == 1536
+    assert tiny_model.max_length == 4096
     assert tiny_model.device.type == "cpu"
 
 
@@ -53,7 +53,7 @@ def test_invalid_request_raises_request_error(tiny_model):
 def test_questions_that_do_not_fit_raise_with_a_code(tiny_model):
     levels = ["ticket " * 45] * 60
     with pytest.raises(RequestError) as raised:
-        tiny_model.decide("s", {"q": score("how urgent?", levels)})
+        tiny_model.decide("s", {"q1": score("how urgent?", levels), "q2": score("how risky?", levels)})
     assert raised.value.code == "questions_too_long"
 
 
